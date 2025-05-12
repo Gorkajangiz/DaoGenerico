@@ -66,14 +66,14 @@ public class DaoPersonaClase implements DaoPersonaInterfaz{
                 }
                 int r = ps.executeUpdate();
                 if (r > 1) {
-                    throw new Exception("Hay más de un contacto con ese nombre");
+                    System.out.println("Hay " + r + " personas con ese nombre :(");
                 }
                 ps.close();
                 con.close();
             } catch (SQLException ex) {
-                Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error: " + ex);
             } catch (Exception ex) {
-                Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error: " + ex);
             }
         return c;
     }
