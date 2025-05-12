@@ -13,12 +13,14 @@ public class Persona {
     private String nombre;
     private String apellido;
     private Integer telefono;
-
-    public Persona(String DNI, String Nombre, String Apellido, Integer Telefono) {
+    private Long id;
+    
+    public Persona(String DNI, String Nombre, String Apellido, Integer Telefono, Long id) {
         this.DNI = DNI;
         this.nombre = Nombre;
         this.apellido = Apellido;
         this.telefono = Telefono;
+        this.id = id;
     }
 
     public String getDNI() {
@@ -52,4 +54,13 @@ public class Persona {
     public void setTelefono(Integer Telefono) {
         this.telefono = Telefono;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
 }

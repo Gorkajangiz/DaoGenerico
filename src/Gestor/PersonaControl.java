@@ -19,6 +19,7 @@ public class PersonaControl {
 
     public Collection<Persona> cogerPorNombre(String nombre){
         c = dao.findByName(nombre);
+        System.out.println(c.toString());
         return c;
     }
     public Collection<Persona> cogerPorDNI(String dni){
@@ -42,11 +43,7 @@ public class PersonaControl {
         return p;
     }
     public void insertar(String nombre, String apellido, String dni, Integer telefono, Long id){
-    }
-    
-    public static void main(String args []) throws SQLException{
-        DaoPersonaClase dao = new DaoPersonaClase();
-        dao.contactar();
-        
+        Persona p = new Persona(nombre, apellido, dni, telefono, id);
+        dao.insert(p);
     }
 }

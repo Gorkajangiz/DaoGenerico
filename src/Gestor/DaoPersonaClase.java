@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  *
  * @author edria
  */
-public class DaoPersonaClase implements DaoPersonaInterfaz{
+public class DaoPersonaClase implements DaoPersonaInterfaz {
 
     public DaoPersonaClase() {
         try {
@@ -33,69 +33,206 @@ public class DaoPersonaClase implements DaoPersonaInterfaz{
 
     public Connection contactar() throws SQLException {
         String url = "jdbc:oracle:thin:@localhost:1521:xe";
-        String user = "sys";
-        String pass = "Enara1997";
+        String user = "C##SCOTT";
+        String pass = "tiger";
         con = DriverManager.getConnection(url, user, pass);
         return con;
     }
-    
-    
 
     @Override
     public Collection<Persona> findByDNI(String DNI) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Collection c = new ArrayList<>();
+        try {
+            PreparedStatement ps;
+            String q1 = "select * from Persona where DNI = ?";
+            this.contactar();
+            ps = con.prepareStatement(q1);
+            ps.setString(1, DNI);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Long id = rs.getLong("id");
+                String DNI2 = rs.getString("DNI");
+                String nombre = rs.getString("nombre");
+                String apellido = rs.getString("apellido");
+                Integer telefono = rs.getInt("telefono");
+                Persona p = new Persona(DNI2, nombre, apellido, telefono, id);
+                c.add(p);
+            }
+            int r = ps.executeUpdate();
+            if (r > 1) {
+                System.out.println("No debería haber más de una persona con el mismo DNI");
+            }
+            ps.close();
+            con.close();
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex);
+        } catch (Exception ex) {
+            System.out.println("Error: " + ex);
+        }
+        return c;
     }
 
     @Override
     public Collection<Persona> findByName(String name) {
         Collection c = new ArrayList<>();
         try {
-                PreparedStatement ps;
-                String q1 = "select * from Persona where nombre = ?";
-                this.contactar();
-                ps = con.prepareStatement(q1);
-                ps.setString(1, name);
-                ResultSet rs = ps.executeQuery();
-                while (rs.next()) {
-                    String DNI = rs.getString("DNI");
-                    String nombre = rs.getString("nombre");
-                    String apellido = rs.getString("apellido");
-                    Integer telefono = rs.getInt("telefono");
-                    Persona p = new Persona(DNI, nombre, apellido, telefono);
-                    c.add(p);
-                }
-                int r = ps.executeUpdate();
-                if (r > 1) {
-                    System.out.println("Hay " + r + " personas con ese nombre :(");
-                }
-                ps.close();
-                con.close();
-            } catch (SQLException ex) {
-                System.out.println("Error: " + ex);
-            } catch (Exception ex) {
-                System.out.println("Error: " + ex);
+            PreparedStatement ps;
+            String q1 = "select * from Persona where nombre = ?";
+            this.contactar();
+            ps = con.prepareStatement(q1);
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Long id = rs.getLong("id");
+                String DNI = rs.getString("DNI");
+                String nombre = rs.getString("nombre");
+                String apellido = rs.getString("apellido");
+                Integer telefono = rs.getInt("telefono");
+                Persona p = new Persona(DNI, nombre, apellido, telefono, id);
+                c.add(p);
             }
+            int r = ps.executeUpdate();
+            if (r > 1) {
+                System.out.println("Hay " + r + " personas con ese nombre :(");
+            }
+            ps.close();
+            con.close();
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex);
+        } catch (Exception ex) {
+            System.out.println("Error: " + ex);
+        }
         return c;
     }
 
     @Override
     public Collection<Persona> findBySurname(String surname) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Collection c = new ArrayList<>();
+        try {
+            PreparedStatement ps;
+            String q1 = "select * from Persona where apellido = ?";
+            this.contactar();
+            ps = con.prepareStatement(q1);
+            ps.setString(1, surname);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Long id = rs.getLong("id");
+                String DNI = rs.getString("DNI");
+                String nombre = rs.getString("nombre");
+                String apellido = rs.getString("apellido");
+                Integer telefono = rs.getInt("telefono");
+                Persona p = new Persona(DNI, nombre, apellido, telefono, id);
+                c.add(p);
+            }
+            int r = ps.executeUpdate();
+            if (r > 1) {
+                System.out.println("Hay: " + r + " personas con ese apellido");
+            }
+            ps.close();
+            con.close();
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex);
+        } catch (Exception ex) {
+            System.out.println("Error: " + ex);
+        }
+        return c;
     }
 
     @Override
     public Collection<Persona> findByPhone(Integer phone) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Collection c = new ArrayList<>();
+        try {
+            PreparedStatement ps;
+            String q1 = "select * from Persona where telefono = ?";
+            this.contactar();
+            ps = con.prepareStatement(q1);
+            ps.setInt(1, phone);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Long id = rs.getLong("id");
+                String DNI = rs.getString("DNI");
+                String nombre = rs.getString("nombre");
+                String apellido = rs.getString("apellido");
+                Integer telefono = rs.getInt("telefono");
+                Persona p = new Persona(DNI, nombre, apellido, telefono, id);
+                c.add(p);
+            }
+            int r = ps.executeUpdate();
+            if (r > 1) {
+                System.out.println("Error, no debería haber más de una persona con el mismo numero");
+            }
+            ps.close();
+            con.close();
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex);
+        } catch (Exception ex) {
+            System.out.println("Error: " + ex);
+        }
+        return c;
     }
 
     @Override
     public Collection<Persona> findAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Collection c = new ArrayList<>();
+        try {
+            PreparedStatement ps;
+            String q1 = "select * from Persona";
+            this.contactar();
+            ps = con.prepareStatement(q1);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Long id = rs.getLong("id");
+                String DNI = rs.getString("DNI");
+                String nombre = rs.getString("nombre");
+                String apellido = rs.getString("apellido");
+                Integer telefono = rs.getInt("telefono");
+                Persona p = new Persona(DNI, nombre, apellido, telefono, id);
+                c.add(p);
+            }
+            int r = ps.executeUpdate();
+            if (r > 1) {
+                System.out.println("Hay " + r + " personas en la lista");
+            }
+            ps.close();
+            con.close();
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex);
+        } catch (Exception ex) {
+            System.out.println("Error: " + ex);
+        }
+        return c;
     }
 
     @Override
     public Persona findById(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Persona p = null;
+        try {
+            PreparedStatement ps;
+            String q1 = "select * from Persona where id = ?";
+            this.contactar();
+            ps = con.prepareStatement(q1);
+            ps.setLong(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Long id1 = rs.getLong("id");
+                String DNI = rs.getString("DNI");
+                String nombre = rs.getString("nombre");
+                String apellido = rs.getString("apellido");
+                Integer telefono = rs.getInt("telefono");
+                p = new Persona(DNI, nombre, apellido, telefono, id1);
+            }
+            int r = ps.executeUpdate();
+            if (r > 1) {
+                System.out.println("No debería haber más de una persona con el mismo ID");
+            }
+            ps.close();
+            con.close();
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex);
+        } catch (Exception ex) {
+            System.out.println("Error: " + ex);
+        }
+        return p;
     }
 
     @Override
@@ -123,11 +260,10 @@ public class DaoPersonaClase implements DaoPersonaInterfaz{
                 System.out.println("Ha ocurrido el siguiente error: " + ex);
             }
         }
-    
     }
 
     @Override
-    public void update(Persona entity)  {
+    public void update(Persona entity) {
         try {
             PreparedStatement ps;
             String q1 = "update Persona set telefono = ?, nombre = ?, apellido = ? where dni = ?";
@@ -212,7 +348,7 @@ public class DaoPersonaClase implements DaoPersonaInterfaz{
         } catch (Exception ex) {
             Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
+
 }
