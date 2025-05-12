@@ -7,8 +7,13 @@ package Gestor;
 import Entidades.Persona;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -33,6 +38,8 @@ public class DaoPersonaClase implements DaoPersonaInterfaz{
         con = DriverManager.getConnection(url, user, pass);
         return con;
     }
+    
+    
 
     @Override
     public Collection<Persona> findByDNI(String DNI) {
@@ -41,7 +48,34 @@ public class DaoPersonaClase implements DaoPersonaInterfaz{
 
     @Override
     public Collection<Persona> findByName(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Collection c = new ArrayList<>();
+        try {
+                PreparedStatement ps;
+                String q1 = "select * from Persona where nombre = ?";
+                this.contactar();
+                ps = con.prepareStatement(q1);
+                ps.setString(1, name);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    String DNI = rs.getString("DNI");
+                    String nombre = rs.getString("nombre");
+                    String apellido = rs.getString("apellido");
+                    Integer telefono = rs.getInt("telefono");
+                    Persona p = new Persona(DNI, nombre, apellido, telefono);
+                    c.add(p);
+                }
+                int r = ps.executeUpdate();
+                if (r > 1) {
+                    throw new Exception("Hay más de un contacto con ese nombre");
+                }
+                ps.close();
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        return c;
     }
 
     @Override
@@ -66,22 +100,119 @@ public class DaoPersonaClase implements DaoPersonaInterfaz{
 
     @Override
     public void insert(Persona entity) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        PreparedStatement ps = null;
+        String q1 = "insert into Persona values(?, ?, ?, ?, ?)";
+        try {
+            this.contactar();
+            ps = con.prepareStatement(q1);
+            ps.setString(2, entity.getDNI());
+            ps.setString(3, entity.getNombre());
+            ps.setString(4, entity.getApellido());
+            ps.setInt(5, entity.getTelefono());
+            ps.executeUpdate();
+            ps.close();
+            con.close();
+        } catch (SQLException ex) {
+            if (ex.getErrorCode() == 12899) {
+                try {
+                    throw ex;
+                } catch (SQLException ex1) {
+                    Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            } else {
+                System.out.println("Ha ocurrido el siguiente error: " + ex);
+            }
+        }
+    
     }
 
     @Override
-    public void update(Persona entity) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void update(Persona entity)  {
+        try {
+            PreparedStatement ps;
+            String q1 = "update Persona set telefono = ?, nombre = ?, apellido = ? where dni = ?";
+            this.contactar();
+            ps = con.prepareStatement(q1);
+            ps.setInt(1, entity.getTelefono());
+            ps.setString(2, entity.getNombre());
+            ps.setString(3, entity.getDNI());
+            ps.setString(4, entity.getDNI());
+            int r = ps.executeUpdate();
+            if (r > 1) {
+                throw new Exception("Hay más de un contacto con ese nombre");
+            }
+            ps.close();
+            con.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     public void delete(Persona entity) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            PreparedStatement ps;
+            String q1 = "delete Persona where DNI = ? and Nombre = ?";
+            this.contactar();
+            ps = con.prepareStatement(q1);
+            ps.setString(1, entity.getDNI());
+            ps.setString(2, entity.getNombre());
+            int r = ps.executeUpdate();
+            if (r > 1) {
+                throw new Exception("Hay más de un contacto con ese nombre");
+            }
+            ps.close();
+            con.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     public void delete(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            PreparedStatement ps;
+            String q1 = "delete Persona where id = ?";
+            this.contactar();
+            ps = con.prepareStatement(q1);
+            ps.setLong(1, id);
+            int r = ps.executeUpdate();
+            if (r > 1) {
+                throw new Exception("Hay más de un contacto con ese nombre");
+            }
+            ps.close();
+            con.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void deleteByDNI(String DNI) {
+        try {
+            PreparedStatement ps;
+            String q1 = "delete Persona where DNI = ?";
+            this.contactar();
+            ps = con.prepareStatement(q1);
+            ps.setString(1, DNI);
+            int r = ps.executeUpdate();
+            if (r > 1) {
+                throw new Exception("Hay más de un contacto con ese nombre");
+            }
+            ps.close();
+            con.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
     
 }

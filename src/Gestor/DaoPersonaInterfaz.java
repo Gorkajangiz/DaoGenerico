@@ -16,4 +16,5 @@ public interface DaoPersonaInterfaz extends Dao<Persona>{
     Collection<Persona> findByName(String name);
     Collection<Persona> findBySurname(String surname);
     Collection<Persona> findByPhone(Integer phone);
+    void deleteByDNI(String DNI);
 }
