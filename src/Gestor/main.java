@@ -25,7 +25,7 @@ public class main {
                 case "1":
                     System.out.println("Nombre:");
                     String nombre = sc.nextLine();
-                    dao.findByName(nombre);
+                    System.out.println(dao.findByName(nombre));
                     break;
                 case "X":
                     ejecutando = false;
