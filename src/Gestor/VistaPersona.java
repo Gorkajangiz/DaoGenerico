@@ -6,9 +6,8 @@ package Gestor;
 
 import Entidades.Persona;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
@@ -22,7 +21,7 @@ public class VistaPersona {
             Scanner sc = new Scanner(System.in);
             Boolean ejecutando = true;
             PersonaControl PC = new PersonaControl();
-            Collection<Persona> c = new ArrayList<>();
+            Collection<Persona> c = null;
             while (ejecutando) {
                 System.out.println("¿Que quieres hacer?");
                 System.out.println("1. Buscar por nombre");
@@ -81,25 +80,25 @@ public class VistaPersona {
                     case "4":
                         System.out.println("DNI:");
                         String DNI = sc.nextLine();
-                        Optional<Persona> p = PC.cogerPorDNI(DNI);
+                        Persona p = PC.cogerPorDNI(DNI);
                         System.out.println("--------------------------------");
-                        System.out.println("Nombre: " + p.get().getNombre());
-                        System.out.println("Apellido: " + p.get().getApellido());
-                        System.out.println("DNI: " + p.get().getDNI());
-                        System.out.println("Telefono: " + p.get().getTelefono());
-                        System.out.println("ID: " + p.get().getId());
+                        System.out.println("Nombre: " + p.getNombre());
+                        System.out.println("Apellido: " + p.getApellido());
+                        System.out.println("DNI: " + p.getDNI());
+                        System.out.println("Telefono: " + p.getTelefono());
+                        System.out.println("ID: " + p.getId());
                         System.out.println("--------------------------------");
                         break;
                     case "5":
                         System.out.println("ID:");
-                        Long id = Long.parseLong(sc.nextLine());
+                        Long id = Long.valueOf(sc.nextLine());
                         p = PC.cogerPorId(id);
                         System.out.println("--------------------------------");
-                        System.out.println("Nombre: " + p.get().getNombre());
-                        System.out.println("Apellido: " + p.get().getApellido());
-                        System.out.println("DNI: " + p.get().getDNI());
-                        System.out.println("Telefono: " + p.get().getTelefono());
-                        System.out.println("ID: " + p.get().getId());
+                        System.out.println("Nombre: " + p.getNombre());
+                        System.out.println("Apellido: " + p.getApellido());
+                        System.out.println("DNI: " + p.getDNI());
+                        System.out.println("Telefono: " + p.getTelefono());
+                        System.out.println("ID: " + p.getId());
                         System.out.println("--------------------------------");
                         break;
 
@@ -125,13 +124,13 @@ public class VistaPersona {
                                 System.out.println("Dame su DNI:");
                                 String DNIDel = sc.nextLine();
                                 p = PC.cogerPorDNI(DNIDel);
-                                PC.borrarPersona(p.get());
+                                PC.borrarPersona(p);
                                 break;
                             case "2":
                                 System.out.println("Dame su ID:");
-                                Long IDDel = Long.parseLong(sc.nextLine());
-                                Optional<Persona> pTemp = PC.cogerPorId(IDDel);
-                                PC.borrarPersona(pTemp.get());
+                                Long IDDel = Long.valueOf(sc.nextLine());
+                                Persona pTemp = PC.cogerPorId(IDDel);
+                                PC.borrarPersona(pTemp);
                                 break;
 
                             default:
@@ -159,8 +158,12 @@ public class VistaPersona {
             }
         } catch (SQLException ex) {
             System.out.println("Error: " + ex + "               ¯\\_(ツ)_/¯");
-        } catch (Exception ex) {
+        } catch (NumberFormatException ex) {
             System.out.println(":(     " + ex);
+        } catch (NoSuchElementException ex) {
+            System.out.println("La persona no existe");
+        } catch (Exception ex) {
+            System.out.println(ex);
         }
     }
 }

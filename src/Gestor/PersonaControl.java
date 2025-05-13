@@ -6,9 +6,7 @@ package Gestor;
 
 import Entidades.Persona;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 
 /**
  *
@@ -18,22 +16,19 @@ public class PersonaControl {
 
     DaoPersonaClase dao = new DaoPersonaClase();
 
-    Collection<Persona> c = new ArrayList<>();
-    Persona p;
-
     public Collection<Persona> cogerPorNombre(String nombre) throws SQLException {
         Collection<Persona> c = null;
         try {
             c = dao.findByName(nombre);
         } catch (SQLException ex) {
-            System.err.println("Ha habido el siguiente error: " + ex);
+            throw ex;
         }
         return c;
     }
 
-    public Optional<Persona> cogerPorDNI(String dni) throws SQLException {
+    public Persona cogerPorDNI(String dni) throws SQLException {
         try {
-            return dao.findByDNI(dni);
+            return dao.findByDNI(dni).orElseThrow();
         } catch (SQLException ex) {
             throw ex;
         }
@@ -63,9 +58,9 @@ public class PersonaControl {
         }
     }
 
-    public Optional<Persona> cogerPorId(Long id) throws SQLException {
+    public Persona cogerPorId(Long id) throws SQLException {
         try {
-            return dao.findById(id);
+            return dao.findById(id).orElseThrow();
         } catch (SQLException ex) {
             throw ex;
         }
@@ -82,37 +77,37 @@ public class PersonaControl {
         }
     }
 
-    public void borrarPersona(Persona p) throws SQLException {
+    public int borrarPersona(Persona p) throws SQLException {
         try {
-            dao.delete(p);
+            return dao.delete(p);
         } catch (SQLException ex) {
             throw ex;
         }
     }
 
-    public void borrarId(Long id) throws SQLException {
+    public int borrarId(Long id) throws SQLException {
         try {
-            dao.delete(id);
+            return dao.delete(id);
         } catch (SQLException ex) {
             throw ex;
         }
     }
 
-    public void editar(String nombre, String apellido, Integer telefono, String dni) throws SQLException {
+    public int editar(String nombre, String apellido, Integer telefono, String dni) throws SQLException {
         try {
-            Optional<Persona> p = dao.findByDNI(dni);
+            Persona p = dao.findByDNI(dni).orElseThrow();
             if (nombre.isEmpty()) {
-                nombre = p.get().getNombre();
+                nombre = p.getNombre();
             }
             if (apellido.isEmpty()) {
-                apellido = p.get().getApellido();
+                apellido = p.getApellido();
             }
             if (telefono == null) {
-                telefono = p.get().getTelefono();
+                telefono = p.getTelefono();
             }
-            Persona updatedPersona = new Persona(p.get().getDNI(), nombre, apellido, telefono, null);
+            Persona updatedPersona = new Persona(p.getDNI(), nombre, apellido, telefono, null);
 
-            dao.update(updatedPersona);
+            return dao.update(updatedPersona);
         } catch (SQLException ex) {
             throw ex;
         }
