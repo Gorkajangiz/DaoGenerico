@@ -54,7 +54,7 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
             String nombre = rs.getString("nombre");
             String apellido = rs.getString("apellido");
             Integer telefono = rs.getInt("telefono");
-            p.orElse(new Persona(DNI, nombre, apellido, telefono, id));
+            p = Optional.of(new Persona(DNI, nombre, apellido, telefono, id));
         }
         int r = ps.executeUpdate();
         if (r > 1) {
@@ -155,7 +155,7 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
             String nombre = rs.getString("nombre");
             String apellido = rs.getString("apellido");
             Integer telefono = rs.getInt("telefono");
-            p.orElse(new Persona(DNI, nombre, apellido, telefono, id));
+            p = Optional.of(new Persona(DNI, nombre, apellido, telefono, id));
         }
         int r = ps.executeUpdate();
         if (r > 1) {
@@ -169,7 +169,6 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
     @Override
     public void insert(Persona entity) throws SQLException {
         PreparedStatement ps = con.prepareStatement("insert into Persona values(id_persona.nextval, ?, ?, ?, ?)");
-
         this.contactar();
         ps.setString(1, entity.getDNI());
         ps.setString(2, entity.getNombre());
