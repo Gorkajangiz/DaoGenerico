@@ -12,10 +12,17 @@ import java.util.Collection;
  * @author edria
  */
 public interface Dao<T> {
+
+    // Optional<T> findById(Long id) throws SQLException;
     Collection<T> findAll() throws SQLException;
+
     T findById(Long id) throws SQLException;
+
     void insert(T entity) throws SQLException;
+
     void update(T entity) throws SQLException;
+
     void delete(T entity) throws SQLException;
+
     void delete(Long id) throws SQLException;
 }

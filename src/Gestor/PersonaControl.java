@@ -20,6 +20,7 @@ public class PersonaControl {
     Persona p;
 
     public Collection<Persona> cogerPorNombre(String nombre) throws SQLException {
+        Collection<Persona> c = null;
         try {
             c = dao.findByName(nombre);
         } catch (SQLException ex) {
@@ -29,30 +30,25 @@ public class PersonaControl {
     }
 
     public Collection<Persona> cogerPorDNI(String dni) throws SQLException {
-        c = dao.findByDNI(dni);
-        return c;
+        return dao.findByDNI(dni);
+
     }
 
     public Collection<Persona> cogerPorApellido(String apellido) throws SQLException {
-        c = dao.findBySurname(apellido);
-        return c;
+        return dao.findBySurname(apellido);
     }
 
     public Collection<Persona> cogerPorTelefono(Integer telefono) throws SQLException {
-        c = dao.findByPhone(telefono);
-        return c;
+        return dao.findByPhone(telefono);
     }
 
     public Collection<Persona> devolverTodo() throws SQLException {
-        c = dao.findAll();
-        return c;
+        return dao.findAll();
     }
 
     public Persona cogerPorId(Long id) throws SQLException {
-        Persona p = dao.findById(id);
-        return p;
+        return dao.findById(id);
     }
-    
 
     public void insertar(String nombre, String apellido, String dni, Integer telefono, Long id) throws SQLException {
         try {
