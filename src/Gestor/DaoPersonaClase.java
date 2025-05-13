@@ -41,17 +41,12 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
 
     @Override
     public Collection<Persona> findByDNI(String DNI) throws SQLException {
-        Collection<Persona> c = null;
+        Collection<Persona> c = null; //deberia retornar una 
         this.contactar();
         try (PreparedStatement ps = con.prepareStatement("select * from Persona where DNI = ?"); ResultSet rs = ps.executeQuery()) {
             ps.setString(1, DNI);
             while (rs.next()) {
-                Long id = rs.getLong("id");
-                String DNI2 = rs.getString("DNI");
-                String nombre = rs.getString("nombre");
-                String apellido = rs.getString("apellido");
-                Integer telefono = rs.getInt("telefono");
-                Persona p = new Persona(DNI2, nombre, apellido, telefono, id);
+                Persona p = this.composePersona(rs);
                 c.add(p);
             }
             int r = ps.executeUpdate();
@@ -66,24 +61,19 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
 
     @Override
     public Collection<Persona> findByName(String name) throws SQLException {
-        Collection<Persona> c = null;
+        Collection<Persona> c = new ArrayList<>();
+
         this.contactar();
         try (PreparedStatement ps = con.prepareStatement("select * from Persona where nombre = ?"); ResultSet rs = ps.executeQuery()) {
             ps.setString(1, name);
             while (rs.next()) {
-                Long id = rs.getLong("id");
-                String DNI = rs.getString("DNI");
-                String nombre = rs.getString("nombre");
-                String apellido = rs.getString("apellido");
-                Integer telefono = rs.getInt("telefono");
-                Persona p = new Persona(DNI, nombre, apellido, telefono, id);
+                Persona p = this.composePersona(rs);
                 c.add(p);
             }
             int r = ps.executeUpdate();
             if (r > 1) {
                 System.out.println("Hay " + r + " personas con ese nombre");
             }
-            ps.close();
         }
         con.close();
         return c;
@@ -91,24 +81,18 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
 
     @Override
     public Collection<Persona> findBySurname(String surname) throws SQLException {
-        Collection<Persona> c = null;
+        Collection<Persona> c = new ArrayList<>();
         try (PreparedStatement ps = con.prepareStatement("select * from Persona where apellido = ?"); ResultSet rs = ps.executeQuery()) {
             this.contactar();
             ps.setString(1, surname);
             while (rs.next()) {
-                Long id = rs.getLong("id");
-                String DNI = rs.getString("DNI");
-                String nombre = rs.getString("nombre");
-                String apellido = rs.getString("apellido");
-                Integer telefono = rs.getInt("telefono");
-                Persona p = new Persona(DNI, nombre, apellido, telefono, id);
+                Persona p = this.composePersona(rs);
                 c.add(p);
             }
             int r = ps.executeUpdate();
             if (r > 1) {
                 System.out.println("Hay: " + r + " personas con ese apellido");
             }
-            ps.close();
         }
         con.close();
         return c;
@@ -116,24 +100,18 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
 
     @Override
     public Collection<Persona> findByPhone(Integer phone) throws SQLException {
-        Collection<Persona> c = null;
+        Collection<Persona> c = new ArrayList<>();
         this.contactar();
         try (PreparedStatement ps = con.prepareStatement("select * from Persona where telefono = ?"); ResultSet rs = ps.executeQuery()) {
             ps.setInt(1, phone);
             while (rs.next()) {
-                Long id = rs.getLong("id");
-                String DNI = rs.getString("DNI");
-                String nombre = rs.getString("nombre");
-                String apellido = rs.getString("apellido");
-                Integer telefono = rs.getInt("telefono");
-                Persona p = new Persona(DNI, nombre, apellido, telefono, id);
+                Persona p = this.composePersona(rs);
                 c.add(p);
             }
             int r = ps.executeUpdate();
             if (r > 1) {
                 System.out.println("Error, no debería haber más de una persona con el mismo numero");
             }
-            ps.close();
         }
         con.close();
         return c;
@@ -141,22 +119,16 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
 
     @Override
     public Collection<Persona> findAll() throws SQLException {
-        Collection<Persona> c = null;
+        Collection<Persona> c = new ArrayList<>();
         try (PreparedStatement ps = con.prepareStatement("select * from Persona"); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                Long id = rs.getLong("id");
-                String DNI = rs.getString("DNI");
-                String nombre = rs.getString("nombre");
-                String apellido = rs.getString("apellido");
-                Integer telefono = rs.getInt("telefono");
-                Persona p = new Persona(DNI, nombre, apellido, telefono, id);
+                Persona p = this.composePersona(rs);
                 c.add(p);
             }
             int r = ps.executeUpdate();
             if (r > 1) {
                 System.out.println("Hay " + r + " personas en la lista");
             }
-            ps.close();
         }
         con.close();
         return c;
@@ -169,18 +141,12 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
         try (PreparedStatement ps = con.prepareStatement("select * from Persona where id = ?"); ResultSet rs = ps.executeQuery()) {
             ps.setLong(1, id);
             while (rs.next()) {
-                Long id1 = rs.getLong("id");
-                String DNI = rs.getString("DNI");
-                String nombre = rs.getString("nombre");
-                String apellido = rs.getString("apellido");
-                Integer telefono = rs.getInt("telefono");
-                p = new Persona(DNI, nombre, apellido, telefono, id1);
+                p = this.composePersona(rs);
             }
             int r = ps.executeUpdate();
             if (r > 1) {
                 System.out.println("No debería haber más de una persona con el mismo ID");
             }
-            ps.close();
         }
         con.close();
         return p;
@@ -255,5 +221,14 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
         } catch (Exception ex) {
             Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private Persona composePersona(ResultSet rs) throws SQLException {
+        Long id = rs.getLong("id");
+        String DNI = rs.getString("DNI");
+        String nombre = rs.getString("nombre");
+        String apellido = rs.getString("apellido");
+        Integer telefono = rs.getInt("telefono");
+        return new Persona(DNI, nombre, apellido, telefono, id);
     }
 }
