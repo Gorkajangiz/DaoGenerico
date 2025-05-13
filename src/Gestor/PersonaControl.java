@@ -6,7 +6,6 @@ package Gestor;
 
 import Entidades.Persona;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -15,11 +14,11 @@ import java.util.Collection;
  */
 public class PersonaControl {
     DaoPersonaClase dao = new DaoPersonaClase();
-    Collection c = new ArrayList<>();
-
+    Collection<Persona> c = null;
+    Persona p;
+    
     public Collection<Persona> cogerPorNombre(String nombre){
         c = dao.findByName(nombre);
-        System.out.println(c.toString());
         return c;
     }
     public Collection<Persona> cogerPorDNI(String dni){
@@ -39,11 +38,21 @@ public class PersonaControl {
         return c;
     }
     public Persona cogerPorId(Long id){
-        Persona p = dao.findById(id);
+        p = dao.findById(id);
         return p;
     }
     public void insertar(String nombre, String apellido, String dni, Integer telefono, Long id){
-        Persona p = new Persona(nombre, apellido, dni, telefono, id);
+        p = new Persona(nombre, apellido, dni, telefono, id);
         dao.insert(p);
+    }
+    public void borrarPersona(Persona p){
+        dao.delete(p);
+    }
+    public void borrarId(Long id){
+        dao.delete(id);
+    }
+    public void editar(String nombre, String apellido, Integer telefono, String dni, Long id) {
+        p = new Persona (dni, nombre, apellido, telefono, null);
+        dao.update(p);
     }
 }

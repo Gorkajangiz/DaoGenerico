@@ -74,7 +74,7 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
 
     @Override
     public Collection<Persona> findByName(String name) {
-        Collection c = new ArrayList<>();
+        Collection<Persona> c = null;
         try {
             PreparedStatement ps;
             String q1 = "select * from Persona where nombre = ?";
@@ -107,7 +107,7 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
 
     @Override
     public Collection<Persona> findBySurname(String surname) {
-        Collection c = new ArrayList<>();
+        Collection<Persona> c = null;
         try {
             PreparedStatement ps;
             String q1 = "select * from Persona where apellido = ?";
@@ -140,7 +140,7 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
 
     @Override
     public Collection<Persona> findByPhone(Integer phone) {
-        Collection c = new ArrayList<>();
+        Collection<Persona> c = null;
         try {
             PreparedStatement ps;
             String q1 = "select * from Persona where telefono = ?";
@@ -173,7 +173,7 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
 
     @Override
     public Collection<Persona> findAll() {
-        Collection c = new ArrayList<>();
+        Collection<Persona> c = null;
         try {
             PreparedStatement ps;
             String q1 = "select * from Persona";
@@ -328,27 +328,4 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
             Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    @Override
-    public void deleteByDNI(String DNI) {
-        try {
-            PreparedStatement ps;
-            String q1 = "delete Persona where DNI = ?";
-            this.contactar();
-            ps = con.prepareStatement(q1);
-            ps.setString(1, DNI);
-            int r = ps.executeUpdate();
-            if (r > 1) {
-                throw new Exception("Hay más de un contacto con ese nombre");
-            }
-            ps.close();
-            con.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
 }
