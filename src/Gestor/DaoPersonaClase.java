@@ -256,27 +256,4 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
             Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    @Override
-    public void deleteByDNI(String DNI) {
-        try {
-            PreparedStatement ps;
-            String q1 = "delete Persona where DNI = ?";
-            this.contactar();
-            ps = con.prepareStatement(q1);
-            ps.setString(1, DNI);
-            int r = ps.executeUpdate();
-            if (r > 1) {
-                throw new Exception("Hay más de un contacto con ese nombre");
-            }
-            ps.close();
-            con.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
 }

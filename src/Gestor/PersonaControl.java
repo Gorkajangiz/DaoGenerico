@@ -6,7 +6,6 @@ package Gestor;
 
 import Entidades.Persona;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -16,16 +15,17 @@ import java.util.Collection;
 public class PersonaControl {
 
     DaoPersonaClase dao = new DaoPersonaClase();
-    Collection c = new ArrayList<>();
+
+    Collection<Persona> c = null;
+    Persona p;
 
     public Collection<Persona> cogerPorNombre(String nombre) throws SQLException {
         try {
             c = dao.findByName(nombre);
-            System.out.println(c.toString());
-            return c;
         } catch (SQLException ex) {
             System.err.println("Ha habido el siguiente error: " + ex);
         }
+        return c;
     }
 
     public Collection<Persona> cogerPorDNI(String dni) throws SQLException {
@@ -52,6 +52,7 @@ public class PersonaControl {
         Persona p = dao.findById(id);
         return p;
     }
+    
 
     public void insertar(String nombre, String apellido, String dni, Integer telefono, Long id) throws SQLException {
         try {
@@ -62,5 +63,18 @@ public class PersonaControl {
                 throw ex;
             }
         }
+    }
+
+    public void borrarPersona(Persona p) {
+        dao.delete(p);
+    }
+
+    public void borrarId(Long id) {
+        dao.delete(id);
+    }
+
+    public void editar(String nombre, String apellido, Integer telefono, String dni, Long id) throws SQLException {
+        p = new Persona(dni, nombre, apellido, telefono, null);
+        dao.update(p);
     }
 }

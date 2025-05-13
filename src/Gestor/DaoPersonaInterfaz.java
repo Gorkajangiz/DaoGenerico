@@ -17,5 +17,4 @@ public interface DaoPersonaInterfaz extends Dao<Persona> {
     Collection<Persona> findByName(String name) throws SQLException;
     Collection<Persona> findBySurname(String surname) throws SQLException;
     Collection<Persona> findByPhone(Integer phone) throws SQLException;
-    void deleteByDNI(String DNI) throws SQLException;
 }
