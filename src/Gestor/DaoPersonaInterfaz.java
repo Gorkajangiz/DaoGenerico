@@ -7,6 +7,7 @@ package Gestor;
 import Entidades.Persona;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  *
@@ -14,7 +15,7 @@ import java.util.Collection;
  */
 public interface DaoPersonaInterfaz extends Dao<Persona> {
 
-    Collection<Persona> findByDNI(String DNI) throws SQLException; //Optional<Persona>
+    Optional<Persona> findByDNI(String DNI) throws SQLException; //Optional<Persona>
 
     Collection<Persona> findByName(String name) throws SQLException;
 

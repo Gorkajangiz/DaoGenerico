@@ -7,6 +7,7 @@ package Gestor;
 import Entidades.Persona;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Scanner;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Scanner;
  */
 public class VistaPersona {
 
-    public static void main(String args[]) throws SQLException{
+    public static void main(String args[]) throws SQLException {
         Scanner sc = new Scanner(System.in);
         Boolean ejecutando = true;
         PersonaControl PC = new PersonaControl();
@@ -78,29 +79,28 @@ public class VistaPersona {
                 case "4":
                     System.out.println("DNI:");
                     String DNI = sc.nextLine();
-                    c = PC.cogerPorDNI(DNI);
-                    for (Persona p : c) {
-                        System.out.println("--------------------------------");
-                        System.out.println("Nombre: " + p.getNombre());
-                        System.out.println("Apellido: " + p.getApellido());
-                        System.out.println("DNI: " + p.getDNI());
-                        System.out.println("Telefono: " + p.getTelefono());
-                        System.out.println("ID: " + p.getId());
-                        System.out.println("--------------------------------");
-                    }
+                    Optional<Persona> p = PC.cogerPorDNI(DNI);
+                    System.out.println("--------------------------------");
+                    System.out.println("Nombre: " + p.get().getNombre());
+                    System.out.println("Apellido: " + p.get().getApellido());
+                    System.out.println("DNI: " + p.get().getDNI());
+                    System.out.println("Telefono: " + p.get().getTelefono());
+                    System.out.println("ID: " + p.get().getId());
+                    System.out.println("--------------------------------");
                     break;
                 case "5":
                     System.out.println("ID:");
                     Long id = Long.parseLong(sc.nextLine());
-                    Persona p = PC.cogerPorId(id);
+                    p = PC.cogerPorId(id);
                     System.out.println("--------------------------------");
-                    System.out.println("Nombre: " + p.getNombre());
-                    System.out.println("Apellido: " + p.getApellido());
-                    System.out.println("DNI: " + p.getDNI());
-                    System.out.println("Telefono: " + p.getTelefono());
-                    System.out.println("ID: " + p.getId());
+                    System.out.println("Nombre: " + p.get().getNombre());
+                    System.out.println("Apellido: " + p.get().getApellido());
+                    System.out.println("DNI: " + p.get().getDNI());
+                    System.out.println("Telefono: " + p.get().getTelefono());
+                    System.out.println("ID: " + p.get().getId());
                     System.out.println("--------------------------------");
                     break;
+
                 case "6":
                     System.out.println("Dame el nombre:");
                     String nombreIn = sc.nextLine();
@@ -122,19 +122,16 @@ public class VistaPersona {
                         case "1":
                             System.out.println("Dame su DNI:");
                             String DNIDel = sc.nextLine();
-                            c = PC.cogerPorDNI(DNIDel);
-                            Persona pDel2 = null;
-                            for (Persona pDel : c) {
-                                pDel2 = new Persona (pDel.getDNI(), pDel.getNombre(), pDel.getApellido(), pDel.getTelefono(), null);
-                            }
-                            PC.borrarPersona(pDel2);
+                            p = PC.cogerPorDNI(DNIDel);
+                            PC.borrarPersona(p.get());
                             break;
                         case "2":
                             System.out.println("Dame su ID:");
                             Long IDDel = Long.parseLong(sc.nextLine());
-                            Persona pTemp = PC.cogerPorId(IDDel);
-                            PC.borrarPersona(pTemp);
+                            Optional<Persona> pTemp = PC.cogerPorId(IDDel);
+                            PC.borrarPersona(pTemp.get());
                             break;
+
                         default:
                             throw new AssertionError();
                     }

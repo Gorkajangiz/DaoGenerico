@@ -7,6 +7,7 @@ package Gestor;
 import Entidades.Persona;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  *
@@ -29,9 +30,8 @@ public class PersonaControl {
         return c;
     }
 
-    public Collection<Persona> cogerPorDNI(String dni) throws SQLException {
+    public Optional<Persona> cogerPorDNI(String dni) throws SQLException {
         return dao.findByDNI(dni);
-
     }
 
     public Collection<Persona> cogerPorApellido(String apellido) throws SQLException {
@@ -46,7 +46,7 @@ public class PersonaControl {
         return dao.findAll();
     }
 
-    public Persona cogerPorId(Long id) throws SQLException {
+    public Optional<Persona> cogerPorId(Long id) throws SQLException {
         return dao.findById(id);
     }
 
@@ -70,7 +70,19 @@ public class PersonaControl {
     }
 
     public void editar(String nombre, String apellido, Integer telefono, String dni, Long id) throws SQLException {
-        p = new Persona(dni, nombre, apellido, telefono, null);
-        dao.update(p);
+        Optional<Persona> p = dao.findByDNI(dni);
+        if (nombre.isEmpty()) {
+            nombre = p.get().getNombre();
+        }
+        if (apellido.isEmpty()) {
+            apellido = p.get().getApellido();
+        }
+        if (telefono == null) {
+            telefono = p.get().getTelefono();
+        }
+        if (dni.isEmpty()) {
+            dni = p.get().getDNI();
+        }
+        dao.update(p.orElse(new Persona(dni, nombre, apellido, telefono, null)));
     }
 }

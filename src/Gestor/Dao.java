@@ -6,6 +6,7 @@ package Gestor;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  *
@@ -16,7 +17,7 @@ public interface Dao<T> {
     // Optional<T> findById(Long id) throws SQLException;
     Collection<T> findAll() throws SQLException;
 
-    T findById(Long id) throws SQLException;
+    Optional<T> findById(Long id) throws SQLException;
 
     void insert(T entity) throws SQLException;
 

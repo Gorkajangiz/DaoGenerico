@@ -12,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
+import static java.util.Optional.empty;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,41 +42,45 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
     }
 
     @Override
-    public Collection<Persona> findByDNI(String DNI) throws SQLException {
-        Collection<Persona> c = null; //deberia retornar una 
+    public Optional<Persona> findByDNI(String DNI) throws SQLException {
+        Optional<Persona> p = null; //deberia retornar una 
         this.contactar();
         try (PreparedStatement ps = con.prepareStatement("select * from Persona where DNI = ?"); ResultSet rs = ps.executeQuery()) {
             ps.setString(1, DNI);
             while (rs.next()) {
-                Persona p = this.composePersona(rs);
-                c.add(p);
+                Long id = rs.getLong("id");
+                DNI = rs.getString("DNI");
+                String nombre = rs.getString("nombre");
+                String apellido = rs.getString("apellido");
+                Integer telefono = rs.getInt("telefono");
+                p.orElse(new Persona(DNI, nombre, apellido, telefono, id));
             }
             int r = ps.executeUpdate();
             if (r > 1) {
-                System.out.println("No debería haber más de una persona con el mismo DNI");
+                System.err.println(r);
             }
             ps.close();
+            con.close();
+            return p;
         }
-        con.close();
-        return c;
     }
 
     @Override
     public Collection<Persona> findByName(String name) throws SQLException {
         Collection<Persona> c = new ArrayList<>();
-
         this.contactar();
-        try (PreparedStatement ps = con.prepareStatement("select * from Persona where nombre = ?"); ResultSet rs = ps.executeQuery()) {
-            ps.setString(1, name);
-            while (rs.next()) {
-                Persona p = this.composePersona(rs);
-                c.add(p);
-            }
-            int r = ps.executeUpdate();
-            if (r > 1) {
-                System.out.println("Hay " + r + " personas con ese nombre");
-            }
+        PreparedStatement ps = con.prepareStatement("select * from Persona where nombre = ?");
+        ps.setString(1, name);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Persona p = this.composePersona(rs);
+            c.add(p);
         }
+        int r = ps.executeUpdate();
+        if (r > 1) {
+            System.out.println("Hay " + r + " personas con ese nombre");
+        }
+
         con.close();
         return c;
     }
@@ -135,13 +141,18 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
     }
 
     @Override
-    public Persona findById(Long id) throws SQLException {
-        Persona p = null;
+    public Optional<Persona> findById(Long id) throws SQLException {
+        Optional<Persona> p = empty();
         this.contactar();
         try (PreparedStatement ps = con.prepareStatement("select * from Persona where id = ?"); ResultSet rs = ps.executeQuery()) {
             ps.setLong(1, id);
             while (rs.next()) {
-                p = this.composePersona(rs);
+                id = rs.getLong("id");
+                String DNI = rs.getString("DNI");
+                String nombre = rs.getString("nombre");
+                String apellido = rs.getString("apellido");
+                Integer telefono = rs.getInt("telefono");
+                p.orElse(new Persona(DNI, nombre, apellido, telefono, id));
             }
             int r = ps.executeUpdate();
             if (r > 1) {
@@ -195,10 +206,14 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
             }
             ps.close();
             con.close();
+
         } catch (SQLException ex) {
-            Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoPersonaClase.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
         } catch (Exception ex) {
-            Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoPersonaClase.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -216,10 +231,14 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
             }
             ps.close();
             con.close();
+
         } catch (SQLException ex) {
-            Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoPersonaClase.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
         } catch (Exception ex) {
-            Logger.getLogger(DaoPersonaClase.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoPersonaClase.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
