@@ -112,7 +112,7 @@ public class VistaPersona {
                         Integer telefonoIn = Integer.valueOf(sc.nextLine());
                         System.out.println("Dame el DNI:");
                         String dniIn = sc.nextLine();
-                        PC.insertar(dniIn, nombreIn, apellidoIn, telefonoIn, null);
+                        PC.insertar(dniIn, nombreIn, apellidoIn, telefonoIn);
                         System.out.println("La persona ha sido insertada con éxito");
                         break;
                     case "7":

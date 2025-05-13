@@ -71,9 +71,9 @@ public class PersonaControl {
         }
     }
 
-    public void insertar(String nombre, String apellido, String dni, Integer telefono, Long id) throws SQLException {
+    public void insertar(String nombre, String apellido, String dni, Integer telefono) throws SQLException {
         try {
-            Persona p = new Persona(nombre, apellido, dni, telefono, id);
+            Persona p = new Persona(nombre, apellido, dni, telefono, null);
             dao.insert(p);
         } catch (SQLException ex) {
             if (ex.getErrorCode() == 12899) {
@@ -110,7 +110,7 @@ public class PersonaControl {
             if (telefono == null) {
                 telefono = p.get().getTelefono();
             }
-            Persona updatedPersona = new Persona(p.get().getNombre(), nombre, apellido, telefono, null);
+            Persona updatedPersona = new Persona(p.get().getDNI(), nombre, apellido, telefono, null);
 
             dao.update(updatedPersona);
         } catch (SQLException ex) {
