@@ -4,6 +4,7 @@
  */
 package Gestor;
 
+import java.sql.SQLException;
 import java.util.Collection;
 
 /**
@@ -11,10 +12,10 @@ import java.util.Collection;
  * @author edria
  */
 public interface Dao<T> {
-    Collection<T> findAll();
-    T findById(Long id);
-    void insert(T entity);
-    void update(T entity);
-    void delete(T entity);
-    void delete(Long id);
+    Collection<T> findAll() throws SQLException;
+    T findById(Long id) throws SQLException;
+    void insert(T entity) throws SQLException;
+    void update(T entity) throws SQLException;
+    void delete(T entity) throws SQLException;
+    void delete(Long id) throws SQLException;
 }

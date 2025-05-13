@@ -5,16 +5,17 @@
 package Gestor;
 
 import Entidades.Persona;
+import java.sql.SQLException;
 import java.util.Collection;
 
 /**
  *
  * @author edria
  */
-public interface DaoPersonaInterfaz extends Dao<Persona>{
-    Collection<Persona> findByDNI(String DNI);
-    Collection<Persona> findByName(String name);
-    Collection<Persona> findBySurname(String surname);
-    Collection<Persona> findByPhone(Integer phone);
-    void deleteByDNI(String DNI);
+public interface DaoPersonaInterfaz extends Dao<Persona> {
+    Collection<Persona> findByDNI(String DNI) throws SQLException;
+    Collection<Persona> findByName(String name) throws SQLException;
+    Collection<Persona> findBySurname(String surname) throws SQLException;
+    Collection<Persona> findByPhone(Integer phone) throws SQLException;
+    void deleteByDNI(String DNI) throws SQLException;
 }

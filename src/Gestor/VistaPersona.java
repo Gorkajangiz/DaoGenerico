@@ -5,6 +5,7 @@
 package Gestor;
 
 import Entidades.Persona;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Scanner;
 
@@ -12,9 +13,9 @@ import java.util.Scanner;
  *
  * @author gorka
  */
-public class main {
+public class VistaPersona {
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws SQLException {
         Scanner sc = new Scanner(System.in);
         Boolean ejecutando = true;
         DaoPersonaClase dao = new DaoPersonaClase();
