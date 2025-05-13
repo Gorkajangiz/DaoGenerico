@@ -31,23 +31,43 @@ public class PersonaControl {
     }
 
     public Optional<Persona> cogerPorDNI(String dni) throws SQLException {
-        return dao.findByDNI(dni);
+        try {
+            return dao.findByDNI(dni);
+        } catch (SQLException ex) {
+            throw ex;
+        }
     }
 
     public Collection<Persona> cogerPorApellido(String apellido) throws SQLException {
-        return dao.findBySurname(apellido);
+        try {
+            return dao.findBySurname(apellido);
+        } catch (SQLException ex) {
+            throw ex;
+        }
     }
 
     public Collection<Persona> cogerPorTelefono(Integer telefono) throws SQLException {
-        return dao.findByPhone(telefono);
+        try {
+            return dao.findByPhone(telefono);
+        } catch (SQLException ex) {
+            throw ex;
+        }
     }
 
     public Collection<Persona> devolverTodo() throws SQLException {
-        return dao.findAll();
+        try {
+            return dao.findAll();
+        } catch (SQLException ex) {
+            throw ex;
+        }
     }
 
     public Optional<Persona> cogerPorId(Long id) throws SQLException {
-        return dao.findById(id);
+        try {
+            return dao.findById(id);
+        } catch (SQLException ex) {
+            throw ex;
+        }
     }
 
     public void insertar(String nombre, String apellido, String dni, Integer telefono, Long id) throws SQLException {
@@ -61,28 +81,40 @@ public class PersonaControl {
         }
     }
 
-    public void borrarPersona(Persona p) {
-        dao.delete(p);
+    public void borrarPersona(Persona p) throws SQLException {
+        try {
+            dao.delete(p);
+        } catch (SQLException ex) {
+            throw ex;
+        }
     }
 
-    public void borrarId(Long id) {
-        dao.delete(id);
+    public void borrarId(Long id) throws SQLException {
+        try {
+            dao.delete(id);
+        } catch (SQLException ex) {
+            throw ex;
+        }
     }
 
     public void editar(String nombre, String apellido, Integer telefono, String dni, Long id) throws SQLException {
-        Optional<Persona> p = dao.findByDNI(dni);
-        if (nombre.isEmpty()) {
-            nombre = p.get().getNombre();
+        try {
+            Optional<Persona> p = dao.findByDNI(dni);
+            if (nombre.isEmpty()) {
+                nombre = p.get().getNombre();
+            }
+            if (apellido.isEmpty()) {
+                apellido = p.get().getApellido();
+            }
+            if (telefono == null) {
+                telefono = p.get().getTelefono();
+            }
+            if (dni.isEmpty()) {
+                dni = p.get().getDNI();
+            }
+            dao.update(p.orElse(new Persona(dni, nombre, apellido, telefono, null)));
+        } catch (SQLException ex) {
+            throw ex;
         }
-        if (apellido.isEmpty()) {
-            apellido = p.get().getApellido();
-        }
-        if (telefono == null) {
-            telefono = p.get().getTelefono();
-        }
-        if (dni.isEmpty()) {
-            dni = p.get().getDNI();
-        }
-        dao.update(p.orElse(new Persona(dni, nombre, apellido, telefono, null)));
     }
 }

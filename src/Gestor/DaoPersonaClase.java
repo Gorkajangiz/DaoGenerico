@@ -156,7 +156,7 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
             }
             int r = ps.executeUpdate();
             if (r > 1) {
-                System.out.println("No debería haber más de una persona con el mismo ID");
+                System.err.println(r);
             }
         }
         con.close();
@@ -192,54 +192,32 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
     }
 
     @Override
-    public void delete(Persona entity) {
-        try {
-            PreparedStatement ps;
-            String q1 = "delete Persona where DNI = ? and Nombre = ?";
-            this.contactar();
-            ps = con.prepareStatement(q1);
+    public void delete(Persona entity) throws SQLException {
+        this.contactar();
+        try (PreparedStatement ps = con.prepareStatement("delete Persona where DNI = ? and Nombre = ?");) {
             ps.setString(1, entity.getDNI());
             ps.setString(2, entity.getNombre());
             int r = ps.executeUpdate();
             if (r > 1) {
-                throw new Exception("Hay más de un contacto con ese nombre");
+                System.err.println(r);
             }
-            ps.close();
-            con.close();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(DaoPersonaClase.class
-                    .getName()).log(Level.SEVERE, null, ex);
-
-        } catch (Exception ex) {
-            Logger.getLogger(DaoPersonaClase.class
-                    .getName()).log(Level.SEVERE, null, ex);
         }
+        con.close();
     }
 
     @Override
-    public void delete(Long id) {
-        try {
-            PreparedStatement ps;
-            String q1 = "delete Persona where id = ?";
-            this.contactar();
-            ps = con.prepareStatement(q1);
+    public void delete(Long id) throws SQLException {
+        this.contactar();
+        try (PreparedStatement ps = con.prepareStatement("delete Persona where id = ?");) {
             ps.setLong(1, id);
             int r = ps.executeUpdate();
             if (r > 1) {
-                throw new Exception("Hay más de un contacto con ese nombre");
+                System.err.println(r);
             }
             ps.close();
-            con.close();
 
-        } catch (SQLException ex) {
-            Logger.getLogger(DaoPersonaClase.class
-                    .getName()).log(Level.SEVERE, null, ex);
-
-        } catch (Exception ex) {
-            Logger.getLogger(DaoPersonaClase.class
-                    .getName()).log(Level.SEVERE, null, ex);
         }
+        con.close();
     }
 
     private Persona composePersona(ResultSet rs) throws SQLException {
