@@ -6,6 +6,7 @@ package Gestor;
 
 import Entidades.Persona;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -17,7 +18,7 @@ public class PersonaControl {
 
     DaoPersonaClase dao = new DaoPersonaClase();
 
-    Collection<Persona> c = null;
+    Collection<Persona> c = new ArrayList<>();
     Persona p;
 
     public Collection<Persona> cogerPorNombre(String nombre) throws SQLException {

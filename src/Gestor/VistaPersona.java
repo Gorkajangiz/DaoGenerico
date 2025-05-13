@@ -6,6 +6,7 @@ package Gestor;
 
 import Entidades.Persona;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Scanner;
@@ -21,7 +22,7 @@ public class VistaPersona {
             Scanner sc = new Scanner(System.in);
             Boolean ejecutando = true;
             PersonaControl PC = new PersonaControl();
-            Collection<Persona> c;
+            Collection<Persona> c = new ArrayList<>();
             while (ejecutando) {
                 System.out.println("¿Que quieres hacer?");
                 System.out.println("1. Buscar por nombre");
@@ -158,6 +159,8 @@ public class VistaPersona {
             }
         } catch (SQLException ex) {
             System.out.println("Error: " + ex + "               ¯\\_(ツ)_/¯");
+        } catch (Exception ex) {
+            System.out.println(":(     " + ex);
         }
     }
 }

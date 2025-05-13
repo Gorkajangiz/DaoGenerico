@@ -45,24 +45,24 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
     public Optional<Persona> findByDNI(String DNI) throws SQLException {
         Optional<Persona> p = null; //deberia retornar una 
         this.contactar();
-        try (PreparedStatement ps = con.prepareStatement("select * from Persona where DNI = ?"); ResultSet rs = ps.executeQuery()) {
-            ps.setString(1, DNI);
-            while (rs.next()) {
-                Long id = rs.getLong("id");
-                DNI = rs.getString("DNI");
-                String nombre = rs.getString("nombre");
-                String apellido = rs.getString("apellido");
-                Integer telefono = rs.getInt("telefono");
-                p.orElse(new Persona(DNI, nombre, apellido, telefono, id));
-            }
-            int r = ps.executeUpdate();
-            if (r > 1) {
-                System.err.println(r);
-            }
-            ps.close();
-            con.close();
-            return p;
+        PreparedStatement ps = con.prepareStatement("select * from Persona where DNI = ?");
+        ps.setString(1, DNI);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Long id = rs.getLong("id");
+            DNI = rs.getString("DNI");
+            String nombre = rs.getString("nombre");
+            String apellido = rs.getString("apellido");
+            Integer telefono = rs.getInt("telefono");
+            p.orElse(new Persona(DNI, nombre, apellido, telefono, id));
         }
+        int r = ps.executeUpdate();
+        if (r > 1) {
+            System.err.println(r);
+        }
+        ps.close();
+        con.close();
+        return p;
     }
 
     @Override
@@ -80,7 +80,7 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
         if (r > 1) {
             System.out.println("Hay " + r + " personas con ese nombre");
         }
-
+        ps.close();
         con.close();
         return c;
     }
@@ -88,18 +88,19 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
     @Override
     public Collection<Persona> findBySurname(String surname) throws SQLException {
         Collection<Persona> c = new ArrayList<>();
-        try (PreparedStatement ps = con.prepareStatement("select * from Persona where apellido = ?"); ResultSet rs = ps.executeQuery()) {
-            this.contactar();
-            ps.setString(1, surname);
-            while (rs.next()) {
-                Persona p = this.composePersona(rs);
-                c.add(p);
-            }
-            int r = ps.executeUpdate();
-            if (r > 1) {
-                System.out.println("Hay: " + r + " personas con ese apellido");
-            }
+        this.contactar();
+        PreparedStatement ps = con.prepareStatement("select * from Persona where apellido = ?");
+        ps.setString(1, surname);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Persona p = this.composePersona(rs);
+            c.add(p);
         }
+        int r = ps.executeUpdate();
+        if (r > 1) {
+            System.out.println("Hay: " + r + " personas con ese apellido");
+        }
+        ps.close();
         con.close();
         return c;
     }
@@ -108,17 +109,18 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
     public Collection<Persona> findByPhone(Integer phone) throws SQLException {
         Collection<Persona> c = new ArrayList<>();
         this.contactar();
-        try (PreparedStatement ps = con.prepareStatement("select * from Persona where telefono = ?"); ResultSet rs = ps.executeQuery()) {
-            ps.setInt(1, phone);
-            while (rs.next()) {
-                Persona p = this.composePersona(rs);
-                c.add(p);
-            }
-            int r = ps.executeUpdate();
-            if (r > 1) {
-                System.out.println("Error, no debería haber más de una persona con el mismo numero");
-            }
+        PreparedStatement ps = con.prepareStatement("select * from Persona where telefono = ?");
+        ps.setInt(1, phone);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Persona p = this.composePersona(rs);
+            c.add(p);
         }
+        int r = ps.executeUpdate();
+        if (r > 1) {
+            System.out.println("Error, no debería haber más de una persona con el mismo numero");
+        }
+        ps.close();
         con.close();
         return c;
     }
@@ -126,15 +128,15 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
     @Override
     public Collection<Persona> findAll() throws SQLException {
         Collection<Persona> c = new ArrayList<>();
-        try (PreparedStatement ps = con.prepareStatement("select * from Persona"); ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Persona p = this.composePersona(rs);
-                c.add(p);
-            }
-            int r = ps.executeUpdate();
-            if (r > 1) {
-                System.out.println("Hay " + r + " personas en la lista");
-            }
+        PreparedStatement ps = con.prepareStatement("select * from Persona");
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Persona p = this.composePersona(rs);
+            c.add(p);
+        }
+        int r = ps.executeUpdate();
+        if (r > 1) {
+            System.out.println("Hay " + r + " personas en la lista");
         }
         con.close();
         return c;
@@ -144,79 +146,77 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
     public Optional<Persona> findById(Long id) throws SQLException {
         Optional<Persona> p = empty();
         this.contactar();
-        try (PreparedStatement ps = con.prepareStatement("select * from Persona where id = ?"); ResultSet rs = ps.executeQuery()) {
-            ps.setLong(1, id);
-            while (rs.next()) {
-                id = rs.getLong("id");
-                String DNI = rs.getString("DNI");
-                String nombre = rs.getString("nombre");
-                String apellido = rs.getString("apellido");
-                Integer telefono = rs.getInt("telefono");
-                p.orElse(new Persona(DNI, nombre, apellido, telefono, id));
-            }
-            int r = ps.executeUpdate();
-            if (r > 1) {
-                System.err.println(r);
-            }
+        PreparedStatement ps = con.prepareStatement("select * from Persona where id = ?");
+        ps.setLong(1, id);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            id = rs.getLong("id");
+            String DNI = rs.getString("DNI");
+            String nombre = rs.getString("nombre");
+            String apellido = rs.getString("apellido");
+            Integer telefono = rs.getInt("telefono");
+            p.orElse(new Persona(DNI, nombre, apellido, telefono, id));
         }
+        int r = ps.executeUpdate();
+        if (r > 1) {
+            System.err.println(r);
+        }
+        ps.close();
         con.close();
         return p;
     }
 
     @Override
     public void insert(Persona entity) throws SQLException {
-        try (PreparedStatement ps = con.prepareStatement("insert into Persona values(id_persona.nextval, ?, ?, ?, ?)");) {
-            this.contactar();
-            ps.setString(1, entity.getDNI());
-            ps.setString(2, entity.getNombre());
-            ps.setString(3, entity.getApellido());
-            ps.setInt(4, entity.getTelefono());
-            ps.executeUpdate();
-            ps.close();
-            con.close();
-        }
+        PreparedStatement ps = con.prepareStatement("insert into Persona values(id_persona.nextval, ?, ?, ?, ?)");
+
+        this.contactar();
+        ps.setString(1, entity.getDNI());
+        ps.setString(2, entity.getNombre());
+        ps.setString(3, entity.getApellido());
+        ps.setInt(4, entity.getTelefono());
+        ps.executeUpdate();
+        ps.close();
+        con.close();
     }
 
     @Override
     public void update(Persona entity) throws SQLException {
         this.contactar();
-        try (PreparedStatement ps = con.prepareStatement("update Persona set telefono = ?, nombre = ?, apellido = ? where dni = ?");) {
-            ps.setInt(1, entity.getTelefono());
-            ps.setString(2, entity.getNombre());
-            ps.setString(3, entity.getDNI());
-            ps.setString(4, entity.getDNI());
-            int r = ps.executeUpdate();
-            ps.close();
-            con.close();
-        }
+        PreparedStatement ps = con.prepareStatement("update Persona set telefono = ?, nombre = ?, apellido = ? where dni = ?");
+        ps.setInt(1, entity.getTelefono());
+        ps.setString(2, entity.getNombre());
+        ps.setString(3, entity.getDNI());
+        ps.setString(4, entity.getDNI());
+        int r = ps.executeUpdate();
+        ps.close();
+        con.close();
     }
 
     @Override
     public void delete(Persona entity) throws SQLException {
         this.contactar();
-        try (PreparedStatement ps = con.prepareStatement("delete Persona where DNI = ? and Nombre = ?");) {
-            ps.setString(1, entity.getDNI());
-            ps.setString(2, entity.getNombre());
-            int r = ps.executeUpdate();
-            if (r > 1) {
-                System.err.println(r);
-            }
+        PreparedStatement ps = con.prepareStatement("delete Persona where DNI = ? and Nombre = ?");
+        ps.setString(1, entity.getDNI());
+        ps.setString(2, entity.getNombre());
+        int r = ps.executeUpdate();
+        if (r > 1) {
+            System.err.println(r);
         }
+        ps.close();
         con.close();
     }
 
     @Override
     public void delete(Long id) throws SQLException {
         this.contactar();
-        try (PreparedStatement ps = con.prepareStatement("delete Persona where id = ?");) {
-            ps.setLong(1, id);
-            int r = ps.executeUpdate();
-            if (r > 1) {
-                System.err.println(r);
-            }
-            ps.close();
-
+        PreparedStatement ps = con.prepareStatement("delete Persona where id = ?");
+        ps.setLong(1, id);
+        int r = ps.executeUpdate();
+        if (r > 1) {
+            System.err.println(r);
         }
+        ps.close();
         con.close();
     }
 
