@@ -185,7 +185,7 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
         PreparedStatement ps = con.prepareStatement("update Persona set telefono = ?, nombre = ?, apellido = ? where dni = ?");
         ps.setInt(1, entity.getTelefono());
         ps.setString(2, entity.getNombre());
-        ps.setString(3, entity.getDNI());
+        ps.setString(3, entity.getApellido());
         ps.setString(4, entity.getDNI());
         int r = ps.executeUpdate();
         ps.close();

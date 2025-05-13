@@ -145,9 +145,9 @@ public class VistaPersona {
                         String apellidoUp = sc.nextLine();
                         System.out.println("Dame el telefono:");
                         Integer telefonoUp = Integer.valueOf(sc.nextLine());
-                        System.out.println("Dame el DNI:");
+                        System.out.println("Dame el DNI de la persona que quieres cambiar:");
                         String dniUp = sc.nextLine();
-                        PC.editar(nombreUp, apellidoUp, telefonoUp, dniUp, null);
+                        PC.editar(nombreUp, apellidoUp, telefonoUp, dniUp);
                         System.out.println("La persona ha sido editada con éxito");
                         break;
                     case "X":

@@ -98,7 +98,7 @@ public class PersonaControl {
         }
     }
 
-    public void editar(String nombre, String apellido, Integer telefono, String dni, Long id) throws SQLException {
+    public void editar(String nombre, String apellido, Integer telefono, String dni) throws SQLException {
         try {
             Optional<Persona> p = dao.findByDNI(dni);
             if (nombre.isEmpty()) {
@@ -110,10 +110,7 @@ public class PersonaControl {
             if (telefono == null) {
                 telefono = p.get().getTelefono();
             }
-            if (dni.isEmpty()) {
-                dni = p.get().getDNI();
-            }
-            dao.update(p.orElse(new Persona(dni, nombre, apellido, telefono, null)));
+            dao.update(p.orElse(new Persona(p.get().getDNI(), nombre, apellido, telefono, Long.parseLong("1000000"))));
         } catch (SQLException ex) {
             throw ex;
         }
