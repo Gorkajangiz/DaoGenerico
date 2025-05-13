@@ -168,12 +168,12 @@ public class DaoPersonaClase implements DaoPersonaInterfaz {
 
     @Override
     public void insert(Persona entity) throws SQLException {
-        PreparedStatement ps = con.prepareStatement("insert into Persona values(id_persona.nextval, ?, ?, ?, ?)");
+        PreparedStatement ps = con.prepareStatement("insert into Persona values(?, ?, ?, ?,id_persona.nextval)");
         this.contactar();
-        ps.setString(1, entity.getDNI());
-        ps.setString(2, entity.getNombre());
-        ps.setString(3, entity.getApellido());
-        ps.setInt(4, entity.getTelefono());
+        ps.setString(1, entity.getNombre());
+        ps.setString(2, entity.getApellido());
+        ps.setInt(3, entity.getTelefono());
+        ps.setString(4, entity.getDNI());
         ps.executeUpdate();
         ps.close();
         con.close();

@@ -110,7 +110,9 @@ public class PersonaControl {
             if (telefono == null) {
                 telefono = p.get().getTelefono();
             }
-            dao.update(p.orElse(new Persona(p.get().getDNI(), nombre, apellido, telefono, Long.parseLong("1000000"))));
+            Persona updatedPersona = new Persona(p.get().getNombre(), nombre, apellido, telefono, null);
+
+            dao.update(updatedPersona);
         } catch (SQLException ex) {
             throw ex;
         }
